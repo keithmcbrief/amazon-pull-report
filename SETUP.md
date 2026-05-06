@@ -88,7 +88,8 @@ Click **"Add new app client"**.
 Fill in:
 - **App name:** anything (e.g. `My Reports Puller`).
 - **API type:** SP-API.
-- **IAM ARN:** Amazon needs an IAM ARN here. If you don't already have one, follow Amazon's guide at https://developer-docs.amazon.com/sp-api/docs/creating-and-configuring-iam-policies-and-entities — a minimal read-only IAM role is fine for this skill.
+
+> **Note:** Older guides still mention setting up an "IAM ARN" / IAM role here. Amazon dropped that requirement in late 2023 — for self-authorized private apps you no longer need any AWS IAM setup. If you see an older blog post telling you otherwise, ignore it.
 
 ### 2c. Pick API roles
 
