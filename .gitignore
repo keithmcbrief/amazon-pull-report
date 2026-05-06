@@ -1,0 +1,19 @@
+# Credentials — never commit
+.env
+
+# Per-user runtime state
+config/preferences.json
+report-log.jsonl
+.pending/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code per-folder local settings
+.claude/
