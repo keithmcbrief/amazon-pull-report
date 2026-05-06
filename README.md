@@ -1,26 +1,65 @@
 # amazon-pull-report
 
-Pull Amazon Seller Central reports via SP-API. One command per report. Output is a structured folder with the original file, a parsed JSON, and a metadata sidecar.
+**Pull Amazon Seller Central reports in one sentence instead of clicking through the dashboard.**
 
-**New here?** Read [SETUP.md](SETUP.md) first (15-min onboarding for non-technical users).
+You say *"pull last month's orders"* — a CSV lands in your folder ~30-90 seconds later. No date pickers, no waiting on a refresh button, no unzipping.
+
+Built as a [Claude Code](https://claude.com/claude-code) skill for Amazon sellers. Self-contained, open source, MIT licensed.
 
 ---
 
-## Quick start
+## Install (paste into Claude Code)
 
-```bash
-cd .claude/skills/amazon-pull-report
+```
+Install the amazon-pull-report skill from
+https://github.com/keithmcbrief/amazon-pull-report at tag v0.7.0.
 
-# List every report you can pull
-uv run bin/run.py --list
-
-# Pull a report
-uv run bin/run.py --report orders-by-order-date --days 7
-uv run bin/run.py --report ledger-detail --days 7
-uv run bin/run.py --report returns-fba --days 30
+Clone it into .claude/skills/amazon-pull-report/ in my current project
+(the entire repo IS the skill folder — don't nest it). Then run setup.sh
+and walk me through the credentials in SETUP.md one step at a time,
+stopping after each step until I confirm.
 ```
 
-Output lands at `./reports/{slug}/{utc-timestamp}/{raw,parsed,metadata}`.
+That's it. Claude clones the repo, installs `uv` and Python, and walks you through the one-time SP-API credential setup (~15 minutes in Seller Central — the unavoidable part).
+
+**Already technical?** `git clone`, `cd amazon-pull-report`, `bash setup.sh`, fill in `.env`. Same result.
+
+---
+
+## What you can pull
+
+Orders, FBA returns, MFN returns, removal orders/shipments/recommendations, inventory ledger (summary + detail), sales & traffic, settlement reports — plus ~150 other SP-API report types via the raw escape hatch.
+
+```bash
+uv run bin/run.py --report orders-by-order-date --preset last-month
+uv run bin/run.py --report returns-fba --days 30
+uv run bin/run.py --report ledger-detail --preset mtd
+uv run bin/run.py --report sales-and-traffic --preset ytd
+uv run bin/run.py --list   # see every registered report
+```
+
+Calendar-aligned date presets handle the timezone math: `last-month`, `mtd`, `ytd`, `last-week`, `today`, `yesterday`, `last-7-days`, `last-30-days`, `last-90-days`. Or pass explicit `--start` / `--end`.
+
+---
+
+## Output
+
+Reports land in **one flat folder** you pick on first run (defaults to `~/Documents/Amazon Reports/`). Filenames include the report name, date range, and pull timestamp — no nested subfolders to navigate:
+
+```
+~/Documents/Amazon Reports/
+├── orders-by-order-date__last-month__pulled-2026-05-06-021327Z.csv
+├── returns-fba__last-30-days__pulled-2026-05-06-023628Z.csv
+└── sales-and-traffic__ytd__pulled-2026-05-06-031245Z.csv
+```
+
+Sidecar `.parsed.json` and `.metadata.json` files travel with each pull for tooling and audit. Choose `.csv` (Excel-friendly) or `.txt` (Amazon's native flat-file format) on first run.
+
+---
+
+**New to this?** Read [SETUP.md](SETUP.md) — the 15-minute onboarding for non-technical sellers.
+
+---
 
 ---
 
